@@ -44,5 +44,5 @@ class SchoolSerializer(serializers.ModelSerializer):
 class DepartmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Department
-        fields = ['id', 'title', 'programID', 'degreeID', 'schoolID', 'gradeID']
+        fields = ['id', 'title', 'program', 'degree', 'school', 'grade']
         

@@ -34,10 +34,10 @@ class School(models.Model):
        
 class Department(models.Model): 
     title = models.CharField(max_length=255)
-    programID = models.ForeignKey(Program, on_delete=models.PROTECT)
-    schoolID = models.ForeignKey(School, on_delete=models.PROTECT)
-    gradeID = models.ForeignKey(Grade, on_delete=models.PROTECT)
-    degreeID = models.ForeignKey(Degree, on_delete=models.PROTECT)
+    program = models.ForeignKey(Program, on_delete=models.PROTECT)
+    school = models.ForeignKey(School, on_delete=models.PROTECT)
+    grade = models.ForeignKey(Grade, on_delete=models.PROTECT)
+    degree = models.ForeignKey(Degree, on_delete=models.PROTECT)
     
     def __str__(self):
         return self.title 
