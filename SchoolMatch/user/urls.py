@@ -4,7 +4,8 @@ from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
     path('create-account', views.user_view, name="user_account"),
-    path('favorites', views.FavoriteView.as_view()),
+    path('favorites/<int:user_id>', views.FavoriteView.as_view()),
+    path('favorites/<int:user_id>/<int:id>', views.DelFavorite.as_view()),
     path('login/', obtain_auth_token, name="login"),
     path('profile', views.user_profile, name="user_profile"),
     path('logout/', views.logout),
