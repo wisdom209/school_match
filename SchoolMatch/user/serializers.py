@@ -30,4 +30,4 @@ class UserSerializer(serializers.ModelSerializer):
 class FavoriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favorite
-        fields = ['id', 'userID', 'depa rtmentID'  ]
+        fields = ['id', 'user_id', 'department_id']
