@@ -39,5 +39,5 @@ class Favorite(models.Model):
     department = models.ForeignKey(Department, on_delete=models.PROTECT)
     
     def __str__(self):
-        return self.userID + " " + self.departmentID
+        return str(self.user_id) + " " + str(self.department_id)
     
