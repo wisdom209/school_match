@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from rest_framework import status, generics
 from rest_framework.response import Response 
 from rest_framework.views import APIView
@@ -60,6 +60,30 @@ def logout(request):
     return Response({"detail": "Logout successfully"}, 200)
     
         
-class FavoriteView(generics.ListCreateAPIView):
+class FavoriteView(generics.CreateAPIView, generics.RetrieveAPIView):
+    serializer_class = FavoriteSerializer
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        user_id = self.request.user.id
+        return Favorite.objects.filter(user_id=user_id)
+    
+    def get_object(self):
+        queryset = self.get_queryset()
+        obj = get_object_or_404(queryset, id=self.kwargs['id'])
+        self.check_object_permissions(self.request, obj)
+        return obj
+    
+    
+class DelFavorite(generics.DestroyAPIView):
     queryset = Favorite.objects.all()
     serializer_class = FavoriteSerializer
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    
+    def get_object(self):
+        user_id = self.kwargs['user_id']
+        fav_id = self.kwargs['id']
+        user = get_object_or_404(User, id=user_id)
+        return get_object_or_404(Favorite, user=user, id=fav_id)
