@@ -26,6 +26,7 @@ class Program(models.Model):
 class School(models.Model):
     name = models.CharField(max_length=255)
     school_type = models.CharField(max_length=50)
+    program = models.ForeignKey(Program, on_delete=models.CASCADE)
     school_link = models.URLField()
     country = models.CharField(max_length=100)
     
