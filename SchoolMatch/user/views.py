@@ -10,6 +10,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.views import obtain_auth_token
+from django.db.models import Q 
 
 # Create your views here.
 @api_view(['POST'])
@@ -94,6 +95,20 @@ class FavoriteSearch(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     search_fields = ['department__title', 'department__school__name', 'department__program__title']
     ordering_fields = ['id']
+    
+    def get_queryset(self):
+        user = self.request.user
+        queryset = super().get_queryset().filter(user=user)
+        search_query = self.request.query_params.get('search')
+        
+        if search_query:
+            queryset = queryset.filter(
+                Q(department__title__icontains=search_query) |
+                Q(department__school__name__icontains=search_query) |
+                Q(department__program__title__icontains=search_query)
+            )
+            
+        return queryset
     
     
 class DelFavorite(generics.DestroyAPIView):
