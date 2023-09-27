@@ -30,4 +30,15 @@ class UserSerializer(serializers.ModelSerializer):
 class FavoriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favorite
-        fields = ['id', 'user_id', 'department_id']
+        fields = ['id', 'name', 'user_id', 'department_id']
+        read_only_fields = ['user', 'department']
+        
+        def create(self, validated_data):
+            validated_data.pop('user', None)
+            validated_data.pop('department', None)
+            return super().create(validated_data)
+        
+        def update(self, instance, validated_data):
+            validated_data.pop('user', None)
+            validated_data.pop('department', None)
+            return super().update(instance, validated_data)
