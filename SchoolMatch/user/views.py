@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from rest_framework import status, generics
+from rest_framework import status, generics, viewsets
 from rest_framework.response import Response 
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
@@ -71,7 +71,7 @@ class UserUpdate(generics.UpdateAPIView):
         return self.request.user
     
     
-class FavoriteView(generics.CreateAPIView, generics.RetrieveAPIView):
+class FavoriteView(generics.CreateAPIView, generics.RetrieveUpdateAPIView):
     serializer_class = FavoriteSerializer
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -85,6 +85,15 @@ class FavoriteView(generics.CreateAPIView, generics.RetrieveAPIView):
         obj = get_object_or_404(queryset, id=self.kwargs['id'])
         self.check_object_permissions(self.request, obj)
         return obj
+    
+
+class FavoriteSearch(viewsets.ModelViewSet):
+    queryset = Favorite.objects.all()
+    serializer_class = FavoriteSerializer
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    search_fields = ['department__title', 'department__school__name', 'department__program__title']
+    ordering_fields = ['id']
     
     
 class DelFavorite(generics.DestroyAPIView):
