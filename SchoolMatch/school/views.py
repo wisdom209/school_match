@@ -5,6 +5,8 @@ from .models import Degree, Grade, Program, School, Department
 from .serializers import DegreeSerializer, GradeSerializer, ProgramSerializer, SchoolSerializer, DepartmentSerializer
 from django.core.paginator import Paginator, EmptyPage
 from django.db.models import Q
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 class DegreeView(generics.ListCreateAPIView):
@@ -29,6 +31,14 @@ class SchoolView(generics.ListCreateAPIView):
 class DepartmentView(generics.ListCreateAPIView):
     queryset = Department.objects.all()
     serializer_class = DepartmentSerializer
+    
+
+class SingleDepartmentView(generics.RetrieveAPIView):
+    queryset = Department.objects.all()
+    serializer_class = DepartmentSerializer
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    lookup_field = 'id'
     
         
 class SearchViewSet(viewsets.ModelViewSet):
