@@ -139,7 +139,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-import django_filters
+import django_filters # install django-filter for this
 
 REST_FRAMEWORK = {
     # Add default filter backends in rest_framework section
