@@ -138,3 +138,33 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+import django_filters
+
+REST_FRAMEWORK = {
+    # Add default filter backends in rest_framework section
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.OrderingFilter',
+        'rest_framework.filters.SearchFilter',
+    ],
+    # Using DRF's default pagination classes
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 3,
+
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    # used for function and class-based function throttling to set throttle sate
+    # 'DEFAULT_THROTTLE_RATES': {
+    #     'anon':'2/minute', # you can also use second, hour, or day
+    #     'user':'10/minute',
+    #     'ten':'10/minute', # based on the new thottle policy created
+    # },
+    
+    # # for class based throttling
+    # 'DEFAULT_THROTTLE_CLASSES': [
+    #     'rest_framework.throttling.AnonRateThrottle',
+    #     'rest_framework.throttling.UserRateThrottle',
+    # ]
+}
