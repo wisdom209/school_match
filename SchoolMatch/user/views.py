@@ -59,7 +59,18 @@ def logout(request):
     
     return Response({"detail": "Logout successfully"}, 200)
     
-        
+
+class UserUpdate(generics.UpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    
+    # Returns authenticated user for update
+    def get_object(self):
+        return self.request.user
+    
+    
 class FavoriteView(generics.CreateAPIView, generics.RetrieveAPIView):
     serializer_class = FavoriteSerializer
     authentication_classes = [TokenAuthentication]
