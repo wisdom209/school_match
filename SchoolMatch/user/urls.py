@@ -10,5 +10,7 @@ urlpatterns = [
     path('profile', views.user_profile, name="user_profile"),
     path('logout/', views.logout),
     path('profile/<int:id>', views.UserUpdate.as_view()),
+    path('favorite/', views.FavoriteSearch.as_view({'get':'list'})),
+    
         
 ]
