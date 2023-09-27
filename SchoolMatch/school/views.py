@@ -1,9 +1,10 @@
 from django.shortcuts import render
-from rest_framework import status, generics, viewset
+from rest_framework import status, generics, viewsets
 from rest_framework.response import Response
 from .models import Degree, Grade, Program, School, Department
 from .serializers import DegreeSerializer, GradeSerializer, ProgramSerializer, SchoolSerializer, DepartmentSerializer
-
+from django.core.paginator import Paginator, EmptyPage
+from django.db.models import Q
 
 # Create your views here.
 class DegreeView(generics.ListCreateAPIView):
@@ -30,7 +31,7 @@ class DepartmentView(generics.ListCreateAPIView):
     serializer_class = DepartmentSerializer
     
         
-class SearchViewSet(viewset.ModelViewSet):
+class SearchViewSet(viewsets.ModelViewSet):
     queryset = Department.objects.all()
     serializer_class = DepartmentSerializer
     
@@ -45,7 +46,7 @@ class SearchViewSet(viewset.ModelViewSet):
         school_type = self.request.query_params.get('school_type', None)
         school_name = self.request.query_params.get('school_name', None)
         program = self.request.query_params.get('program', None)
-        search = self.request.query_params.get('search', None)
+        search = self.request.query_params.get('search', None)        
         
         if grade:
             queryset = queryset.filter(grade__grade=grade)
@@ -56,16 +57,32 @@ class SearchViewSet(viewset.ModelViewSet):
         if school_type:
             queryset = queryset.filter(school__type=school_type)
             
-        if school__name:
+        if school_name:
             queryset = queryset.filter(school__name=school_name)
             
         if program:
             queryset = queryset.filter(program__name=program)
             
         if search:
-            search_field = ['title', 'school__name', 'degree__title', 'grade__grade', 'program__name']
+            search_fields = ['title', 'school__name', 'degree__title', 'grade__grade', 'program__name']
             
-            queries = [Q(**{field + '__icontains': search}) | Q(**{field + '__istartswith': search}) for field in search]
+            queries = [Q(**{field + '__icontains': search}) | Q(**{field + '__istartswith': search_fields}) for field in search]
             queryset = queryset.filter(*queries)
             
+        
+        # for pagination
+        per_page = int(request.query_params.get('perpage', default=10))
+        page = int(request.query_params.get('page', default=1))
+        
+        paginator = Paginator(queryset, per_page) #initialize the paginator object where the number of items per per equal perpage
+        try:
+            queryset = paginator.page(page)
+        except EmptyPage:
+            queryset = []
+            
         return queryset
+    
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
