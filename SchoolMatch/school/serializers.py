@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Degree, Grade, Department, Program, School
+from .models import Degree, Grade, Department, Program, School, Image
 from rest_framework.validators import UniqueValidator
 
 class DegreeSerializer(serializers.ModelSerializer):
@@ -46,3 +46,8 @@ class DepartmentSerializer(serializers.ModelSerializer):
         model = Department
         fields = ['id', 'title', 'program', 'degree', 'school', 'grade']
         
+
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Image
+        fields = ['id', 'title', 'link', 'school']
