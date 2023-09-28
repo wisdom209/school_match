@@ -31,6 +31,16 @@ class School(models.Model):
     
     def __str__(self):
         return self.name
+    
+
+class Image(models.Model):
+    title = models.CharField(max_length=100)
+    link = models.URLField(max_length=255)
+    school = models.ForeignKey(School, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.title
+
        
 class Department(models.Model): 
     title = models.CharField(max_length=255)
