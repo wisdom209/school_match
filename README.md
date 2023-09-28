@@ -79,7 +79,3 @@ SchoolMatch is a Django API for managing information related to educational degr
 
 For detailed information on how to use the API and the available endpoints, refer to the [API Documentation](DOCUMENTATION.md).
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
