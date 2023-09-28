@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework import status, generics, viewsets
 from rest_framework.response import Response
-from .models import Degree, Grade, Program, School, Department
-from .serializers import DegreeSerializer, GradeSerializer, ProgramSerializer, SchoolSerializer, DepartmentSerializer
+from .models import Degree, Grade, Program, School, Department, Image
+from .serializers import DegreeSerializer, GradeSerializer, ProgramSerializer, SchoolSerializer, DepartmentSerializer, ImageSerializer
 from django.core.paginator import Paginator, EmptyPage
 from django.db.models import Q
 from rest_framework.authentication import TokenAuthentication
@@ -21,6 +21,11 @@ class GradeView(generics.ListCreateAPIView):
 class ProgramView(generics.ListCreateAPIView):
     queryset = Program.objects.all()
     serializer_class = ProgramSerializer
+    
+
+class ImageView(generics.ListCreateAPIView):
+    queryset = Image.onjects.all()
+    serializer_class = ImageSerializer
     
     
 class SchoolView(generics.ListCreateAPIView):
@@ -55,6 +60,7 @@ class SearchViewSet(viewsets.ModelViewSet):
         degree_type = self.request.query_params.get('degree_type', None)
         school_type = self.request.query_params.get('school_type', None)
         school_name = self.request.query_params.get('school_name', None)
+        country = self.request.query_params.get('country', None)
         program = self.request.query_params.get('program', None)
         search = self.request.query_params.get('search', None)        
         
@@ -70,11 +76,14 @@ class SearchViewSet(viewsets.ModelViewSet):
         if school_name:
             queryset = queryset.filter(school__name=school_name)
             
+        if country:
+            queryset = queryset.filter(school__country=country)
+            
         if program:
             queryset = queryset.filter(program__name=program)
             
         if search:
-            search_fields = ['title', 'school__name', 'degree__title', 'grade__grade', 'program__name']
+            search_fields = ['title', 'school__name', 'degree__title', 'grade__grade', 'program__name', 'school__country']
             
             queries = [Q(**{field + '__icontains': search}) | Q(**{field + '__istartswith': search_fields}) for field in search]
             queryset = queryset.filter(*queries)
