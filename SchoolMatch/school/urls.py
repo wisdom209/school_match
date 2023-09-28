@@ -8,6 +8,7 @@ urlpatterns = [
     path('program', views.ProgramView.as_view()),
     path('school', views.SchoolView.as_view()),
     path('department', views.DepartmentView.as_view()),
+    path('image', views.ImageView.as_view()),
     path('search', views.SearchViewSet.as_view({'get':'list'})),
     path('program/<int:id>', views.SingleDepartmentView.as_view()),
     
