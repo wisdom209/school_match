@@ -3,7 +3,7 @@ from rest_framework import status, generics, viewsets
 from rest_framework.response import Response 
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from .serializers import UserSerializer, FavoriteSerializer
+from .serializers import UserSerializer, FavoriteSerializer, FavoritePostSerializer
 from .models import Favorite
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
@@ -20,7 +20,7 @@ def user_view(request):
         password = serializer.validated_data.get('password')
         confirm_password = serializer.validated_data.get('confirm_password')
         if password != confirm_password:
-            return Response({'error': 'Password mismatch'})
+            return Response({'error': 'Password mismatch'}) 
         else:
             user = serializer.save()
             user.set_password(request.data['password'])
@@ -72,10 +72,11 @@ class UserUpdate(generics.UpdateAPIView):
         return self.request.user
     
     
-class FavoriteView(generics.CreateAPIView, generics.RetrieveUpdateAPIView):
-    serializer_class = FavoriteSerializer
+class FavoriteView(generics.ListCreateAPIView):
+    serializer_class = FavoritePostSerializer
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    lookup_field = 'user_id'
     
     def get_queryset(self):
         user_id = self.request.user.id
@@ -83,7 +84,7 @@ class FavoriteView(generics.CreateAPIView, generics.RetrieveUpdateAPIView):
     
     def get_object(self):
         queryset = self.get_queryset()
-        obj = get_object_or_404(queryset, id=self.kwargs['id'])
+        obj = get_object_or_404(queryset, id=self.kwargs['user_id'])
         self.check_object_permissions(self.request, obj)
         return obj
     
@@ -93,25 +94,11 @@ class FavoriteSearch(viewsets.ModelViewSet):
     serializer_class = FavoriteSerializer
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
-    search_fields = ['department__title', 'department__school__name', 'department__program__title']
-    ordering_fields = ['id']
+    search_fields = ['department__school__name', 'department__program__name', 'department__course__name']
+
+
     
-    def get_queryset(self):
-        user = self.request.user
-        queryset = super().get_queryset().filter(user=user)
-        search_query = self.request.query_params.get('search')
-        
-        if search_query:
-            queryset = queryset.filter(
-                Q(department__title__icontains=search_query) |
-                Q(department__school__name__icontains=search_query) |
-                Q(department__program__title__icontains=search_query)
-            )
-            
-        return queryset
-    
-    
-class DelFavorite(generics.DestroyAPIView):
+class RetrieveDeleteFavorite(generics.RetrieveDestroyAPIView):
     queryset = Favorite.objects.all()
     serializer_class = FavoriteSerializer
     authentication_classes = [TokenAuthentication]

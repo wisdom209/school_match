@@ -8,7 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'username', 'email', 'password', 'confirm_password']
+        fields = ['id', 'first_name', 'last_name', 'username', 'email', 'password', 'confirm_password']
 
     def create(self, validated_data):
         # extra and remove the 'password' field from the validated data
@@ -27,18 +27,26 @@ class UserSerializer(serializers.ModelSerializer):
         
         return user
 
-class FavoriteSerializer(serializers.ModelSerializer):
+class FavoriteSerializer(serializers.ModelSerializer):    
     class Meta:
         model = Favorite
-        fields = ['id', 'name', 'user_id', 'department_id']
-        read_only_fields = ['user', 'department']
+        fields = ['id', 'user', 'department']
+        depth = 2
+
+
+class FavoritePostSerializer(serializers.ModelSerializer):    
+    class Meta:
+        model = Favorite
+        fields = ['id', 'user', 'department']
+
+        # read_only_fields = ['user', 'department']
         
-        def create(self, validated_data):
-            validated_data.pop('user', None)
-            validated_data.pop('department', None)
-            return super().create(validated_data)
+        # def create(self, validated_data):
+        #     validated_data.pop('user', None)
+        #     validated_data.pop('department', None)
+        #     return super().create(validated_data)
         
-        def update(self, instance, validated_data):
-            validated_data.pop('user', None)
-            validated_data.pop('department', None)
-            return super().update(instance, validated_data)
+        # def update(self, instance, validated_data):
+        #     validated_data.pop('user', None)
+        #     validated_data.pop('department', None)
+        #     return super().update(instance, validated_data)

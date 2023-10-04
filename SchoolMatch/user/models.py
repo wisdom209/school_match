@@ -35,10 +35,9 @@ from django.contrib.auth.models import User
 
 
 class Favorite(models.Model):
-    name = models.CharField(max_length=255, blank=True)
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     department = models.ForeignKey(Department, on_delete=models.PROTECT)
     
     def __str__(self):
-        return str(self.user_id) + " " + str(self.department_id)
+        return f"Favorite for {self.user} - {self.department}"
     
