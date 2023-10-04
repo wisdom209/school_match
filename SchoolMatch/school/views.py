@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework import status, generics, viewsets
 from rest_framework.response import Response
-from .models import Degree, Grade, Program, School, Department, Image
-from .serializers import DegreeSerializer, GradeSerializer, ProgramSerializer, SchoolSerializer, DepartmentSerializer, ImageSerializer
+from .models import Degree, Grade, Program, School, Department, Image, Course
+from .serializers import DegreeSerializer, GradeSerializer, ProgramSerializer, SchoolSerializer, DepartmentSerializer, ImageSerializer, CourseSerializer, DepartmentSerializerRestricted
 from django.core.paginator import Paginator, EmptyPage
 from django.db.models import Q
 from rest_framework.authentication import TokenAuthentication
@@ -18,24 +18,38 @@ class GradeView(generics.ListCreateAPIView):
     serializer_class = GradeSerializer
     
     
+class ImageView(generics.ListCreateAPIView):
+    queryset = Image.objects.all()
+    serializer_class = ImageSerializer    
+    
 class ProgramView(generics.ListCreateAPIView):
     queryset = Program.objects.all()
     serializer_class = ProgramSerializer
     
 
-class ImageView(generics.ListCreateAPIView):
-    queryset = Image.onjects.all()
-    serializer_class = ImageSerializer
+class CourseView(generics.ListCreateAPIView):
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer
+
+
+class SingleCourseView(generics.RetrieveUpdateAPIView):
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer
     
     
 class SchoolView(generics.ListCreateAPIView):
+    queryset = School.objects.all()
+    serializer_class = SchoolSerializer
+    
+
+class SingleSchoolView(generics.RetrieveUpdateAPIView):
     queryset = School.objects.all()
     serializer_class = SchoolSerializer
 
 
 class DepartmentView(generics.ListCreateAPIView):
     queryset = Department.objects.all()
-    serializer_class = DepartmentSerializer
+    serializer_class = DepartmentSerializer 
     
 
 class SingleDepartmentView(generics.RetrieveAPIView):
@@ -45,53 +59,76 @@ class SingleDepartmentView(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     lookup_field = 'id'
     
+    def get_object(self):
+        queryset = self.get_queryset()
+        obj = generics.get_object_or_404(queryset, **self.kwargs)
+        obj.program_detail = obj.program.program_detail
+        
+        return obj
+    
         
 class SearchViewSet(viewsets.ModelViewSet):
     queryset = Department.objects.all()
-    serializer_class = DepartmentSerializer
+    serializer_class = DepartmentSerializerRestricted
+    search_fields = ['department__school__name', 'department__degree__title', 'department__grade__grade', 'department__course__name', 'department__program__name', 'department__school__country']
     
     
     #implement search field and filtering
+    
     def get_queryset(self):
         queryset = super().get_queryset()
-        
-        # filter parameter
-        grade = self.request.query_params.get('grade_', None)
-        degree_type = self.request.query_params.get('degree_type', None)
-        school_type = self.request.query_params.get('school_type', None)
-        school_name = self.request.query_params.get('school_name', None)
+    
+        # Filter parameters
+        grade = self.request.query_params.get('grade', None)
+        degree_type = self.request.query_params.get('degree', None)
+        school_type = self.request.query_params.get('type', None)
+        school_name = self.request.query_params.get('school', None)
         country = self.request.query_params.get('country', None)
+        course = self.request.query_params.get('course', None)
         program = self.request.query_params.get('program', None)
-        search = self.request.query_params.get('search', None)        
-        
+        search = self.request.query_params.get('search', None)
+    
+        # Build a Q object to accumulate search conditions
+        search_conditions = Q()
+    
         if grade:
-            queryset = queryset.filter(grade__grade=grade)
-        
+            search_conditions &= Q(grade__grade=grade)
+    
         if degree_type:
-            queryset = queryset.filter(degree__title=degree_type)
-        
+            search_conditions &= Q(degree__title=degree_type)
+    
         if school_type:
-            queryset = queryset.filter(school__type=school_type)
-            
+            search_conditions &= Q(school__type=school_type)
+        
         if school_name:
-            queryset = queryset.filter(school__name=school_name)
-            
+            search_conditions &= Q(school__name=school_name)
+        
+        if course:
+            search_conditions &= Q(course__name=course)
+        
         if country:
-            queryset = queryset.filter(school__country=country)
-            
+            search_conditions &= Q(school__country=country)
+        
         if program:
-            queryset = queryset.filter(program__name=program)
-            
+            search_conditions &= Q(program__name=program)
+    
         if search:
-            search_fields = ['title', 'school__name', 'degree__title', 'grade__grade', 'program__name', 'school__country']
-            
-            queries = [Q(**{field + '__icontains': search}) | Q(**{field + '__istartswith': search_fields}) for field in search]
-            queryset = queryset.filter(*queries)
-            
+            search_fields = ['course__name', 'school__name', 'degree__title', 'grade__grade', 'program__name', 'school__country']
+            search_query = Q()
+            for field in search_fields:
+                search_query |= Q(**{field + '__icontains': search})
+        
+            search_conditions &= search_query
+    
+        return queryset.filter(search_conditions)
+    
+    
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
         
         # for pagination
-        per_page = int(request.query_params.get('perpage', default=10))
-        page = int(request.query_params.get('page', default=1))
+        per_page = int(self.request.query_params.get('perpage', default=10))
+        page = int(self.request.query_params.get('page', default=1))
         
         paginator = Paginator(queryset, per_page) #initialize the paginator object where the number of items per per equal perpage
         try:
@@ -99,9 +136,5 @@ class SearchViewSet(viewsets.ModelViewSet):
         except EmptyPage:
             queryset = []
             
-        return queryset
-    
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
