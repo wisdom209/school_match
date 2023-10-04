@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Degree, Grade, Department, Program, School, Image
+from .models import Degree, Grade, Department, Program, School, Image, Course
 from rest_framework.validators import UniqueValidator
 
 class DegreeSerializer(serializers.ModelSerializer):
@@ -13,7 +13,7 @@ class DegreeSerializer(serializers.ModelSerializer):
         
 class GradeSerializer(serializers.ModelSerializer):
     grade = serializers.CharField(
-        max_length = 10,
+        max_length = 100,
         validators = [UniqueValidator(queryset=Grade.objects.all())]
     )
     class Meta:
@@ -23,31 +23,63 @@ class GradeSerializer(serializers.ModelSerializer):
 
 class ProgramSerializer(serializers.ModelSerializer):
     name = serializers.CharField(
-        max_length = 10,
+        max_length = 100,
         validators = [UniqueValidator(queryset=Program.objects.all())]
     )
     class Meta:
         model = Program
         fields = ['id', 'name', 'program_detail']
         
-        
-class SchoolSerializer(serializers.ModelSerializer):
+class CourseSerializer(serializers.ModelSerializer):
     name = serializers.CharField(
-        max_length = 10,
+        max_length = 100,
+        validators = [UniqueValidator(queryset=Course.objects.all())]
+    )
+    
+    class Meta:
+        model = Course
+        fields = ['id', 'name']
+        
+        
+class SchoolSerializerA(serializers.ModelSerializer):
+    name = serializers.CharField(
+        max_length = 255,
         validators = [UniqueValidator(queryset=School.objects.all())]
     )
     class Meta:
         model = School
-        fields = ['id', 'name', 'school_type', 'school_link', 'country']
-        
+        fields = ['id', 'name', 'school_type', 'image', 'country']
+        depth = 1
+
+
+class SchoolSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(
+        max_length = 255,
+        validators = [UniqueValidator(queryset=School.objects.all())]
+    )
+    class Meta:
+        model = School
+        fields = ['id', 'name', 'school_type', 'image', 'school_link', 'country']
+        depth = 1
+                
 
 class DepartmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Department
-        fields = ['id', 'title', 'program', 'degree', 'school', 'grade']
-        
+        fields = ['id', 'program']
+        depth = 1
 
+
+class DepartmentSerializerRestricted(serializers.ModelSerializer):
+    course = CourseSerializer()
+    school = SchoolSerializerA()
+    class Meta:
+        model = Department
+        fields = ['id', 'degree', 'school', 'grade', 'course']
+        depth = 3
+        
+        
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
-        fields = ['id', 'title', 'link', 'school']
+        fields = ['id', 'title', 'image', 'file_path']
