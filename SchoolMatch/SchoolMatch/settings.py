@@ -28,7 +28,9 @@ SECRET_KEY = 'django-insecure-o^9x4aoicv#zo7-2v&=ig$eja$gq*2&v!-7+=@^m)rjo1_#g^=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+	'*'
+]
 
 
 # Application definition
@@ -46,6 +48,7 @@ INSTALLED_APPS = [
     'user',
     'rest_framework',
     'rest_framework.authtoken',
+	'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -56,6 +59,32 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'corsheaders.middleware.CorsMiddleware',
+]
+
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:5173',  # Add your frontend's origin here
+]
+
+CORS_ALLOW_METHODS = [
+    'GET',
+    'POST',
+    'PUT',
+    'PATCH',
+    'DELETE',
+    'OPTIONS',
+]
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
 ]
 
 ROOT_URLCONF = 'SchoolMatch.urls'
