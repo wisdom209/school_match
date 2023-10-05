@@ -1,4 +1,5 @@
 import { Button, Stack, Typography } from '@mui/material'
+import Cookie from 'js-cookie'
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
@@ -27,7 +28,12 @@ const NavBar = ({ options }) => {
 							{
 								if (options && options.length >= 1) {
 									if (options.includes(v.name.toLowerCase())) {
-										return <Button key={i} onClick={() => { navigate(v.link) }}>
+										return <Button key={i} onClick={() => {
+											if (v.name == 'Logout') {
+												Cookie.set('token', '')
+											}
+											navigate(v.link)
+										}}>
 											<Typography color="white" fontSize='1.5rem'>
 												{v.name}
 											</Typography>
