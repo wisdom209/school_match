@@ -1,7 +1,9 @@
-import { Box, Card, CardMedia, Stack, Typography } from '@mui/material'
+import { FavoriteBorder } from '@mui/icons-material'
+import { Box, Card, CardMedia, IconButton, Stack, Typography } from '@mui/material'
 import React from 'react'
 import Footer from '../components/Footer'
 import NavBar from '../components/NavBar'
+
 
 const SearchResult = () => {
 
@@ -21,7 +23,7 @@ const SearchResult = () => {
 
 			<Box minHeight='100vh' width='100vw' bgcolor='teal'>
 				{/* Nav Bar */}
-				<NavBar />
+				<NavBar options={['home', 'profile', 'favorites', 'search', 'logout']}/>
 
 				<Stack>
 					<Stack>
@@ -50,6 +52,15 @@ const SearchResult = () => {
 								<Typography><b>Degree:</b> {degree}</Typography>
 								<Typography><b>Grade:</b> {grade}</Typography>
 								<Typography><a href={url}>Visit Us</a></Typography>
+								<IconButton sx={{
+									'&:hover': {
+										background: 'transparent'
+									},
+									width: "10px"
+
+								}}>
+									<FavoriteBorder />
+								</IconButton>
 							</Stack>
 						</Stack>)}
 					</Stack>

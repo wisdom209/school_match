@@ -1,8 +1,8 @@
 import { Box, Button, Stack, TextField, Typography } from '@mui/material'
 import React from 'react'
-import NavBar from '../components/NavBar'
-import Footer from '../components/Footer'
 import { useNavigate } from 'react-router-dom'
+import Footer from '../components/Footer'
+import NavBar from '../components/NavBar'
 
 const Search = () => {
 	const navbg = '#002e29'
@@ -18,7 +18,7 @@ const Search = () => {
 		<>
 			<Box minHeight='100vh' width='100vw' bgcolor='teal'>
 				{/* Nav Bar */}
-				<NavBar />
+				<NavBar options={['home', 'profile', 'favorites', 'search', 'logout']}/>
 
 				{/* main page */}
 				<Box display={'flex'} justifyContent={'center'} alignItems={'center'} mt={5} flexDirection={'column'} width={'100vw'}>

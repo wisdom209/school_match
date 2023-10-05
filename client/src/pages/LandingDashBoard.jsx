@@ -1,8 +1,9 @@
+import { FavoriteBorder } from '@mui/icons-material'
+import { Box, Card, CardMedia, IconButton, Stack, Typography } from '@mui/material'
 import React from 'react'
-import { Box, Typography, Stack, Button, Card, CardMedia } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
-import NavBar from '../components/NavBar'
 import Footer from '../components/Footer'
+import NavBar from '../components/NavBar'
 
 const LandingDashBoard = () => {
 	const navbg = '#002e29'
@@ -23,7 +24,7 @@ const LandingDashBoard = () => {
 
 			<Box minHeight='100vh' width='100vw' bgcolor='teal'>
 				{/* Nav Bar */}
-				<NavBar />
+				<NavBar options={['home', 'profile', 'favorites', 'search', 'logout']} />
 
 				<Stack>
 					<Stack>
@@ -52,6 +53,15 @@ const LandingDashBoard = () => {
 								<Typography><b>Degree:</b> {degree}</Typography>
 								<Typography><b>Grade:</b> {grade}</Typography>
 								<Typography><a href={url}>Visit Us</a></Typography>
+								<IconButton sx={{
+									'&:hover': {
+										background: 'transparent'
+									},
+									width: "10px"
+
+								}}>
+									<FavoriteBorder />
+								</IconButton>
 							</Stack>
 						</Stack>)}
 					</Stack>

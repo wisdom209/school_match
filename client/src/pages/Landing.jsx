@@ -1,9 +1,9 @@
-import { Box, Button, Divider, Stack, Typography } from '@mui/material'
+import { Box, Button, Stack, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { searchGeneral } from '../api/client'
-import NavBar from '../components/NavBar'
 import Footer from '../components/Footer'
+import NavBar from '../components/NavBar'
 
 const Landing = () => {
 	const navbg = '#002e29'
@@ -23,7 +23,7 @@ const Landing = () => {
 		<>
 			<Box minHeight='100vh' width='100vw' bgcolor='teal'>
 				{/* Nav Bar */}
-				<NavBar />
+				<NavBar options={["sign up", "sign in"]} />
 				<Box display={'flex'} justifyContent={'center'} alignItems={'center'} mt={5}>
 					<Stack direction={'row'} spacing={5} padding={15}>
 						<img src='/online_test.svg' alt='certificate png' style={
@@ -68,7 +68,7 @@ const Landing = () => {
 									<Typography><b>{v.degree.title}</b></Typography>
 									<Typography><b>{v.grade.grade}</b></Typography>
 									<Typography><b>{v.course.name}</b></Typography>
-									<Typography><a href="/dashboard">See Details</a></Typography>
+									<Typography><Link to="/dashboard">See Details</Link></Typography>
 								</Stack>
 
 							</Stack>

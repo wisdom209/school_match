@@ -28,7 +28,7 @@ function App() {
 					<Route path='/profile' element={<Profile />}></Route>
 					<Route path='/search' element={<Search />}></Route>
 					<Route path='/search_result' element={<SearchResult />}></Route>
-					<Route path='/*' element={<NotFound />}></Route>
+					<Route path='*' element={<NotFound />}></Route>
 				</Routes>
 			</Router>
 		</AppContext.Provider>

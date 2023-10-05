@@ -15,7 +15,7 @@ const Login = () => {
 		<>
 			<Box minHeight='100vh' width='100vw' bgcolor='teal'>
 				{/* Nav Bar */}
-				<NavBar />
+				<NavBar options={['sign up']}/>
 
 				{/* main page */}
 				<Box display={'flex'} justifyContent={'center'} alignItems={'center'} mt={5} flexDirection={'column'} width={'100vw'}>

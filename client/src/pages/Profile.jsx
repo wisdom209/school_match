@@ -1,14 +1,14 @@
-import React from 'react'
-import NavBar from '../components/NavBar'
 import { Box, Button, Stack, Typography } from '@mui/material'
+import React from 'react'
 import { useNavigate } from 'react-router-dom'
+import NavBar from '../components/NavBar'
 
 const Profile = () => {
 	const navigate = useNavigate()
 
 	return (
 		<>
-			<NavBar />
+			<NavBar options={['home', 'profile', 'favorites', 'search', 'logout']} />
 			<Box minHeight={'100vh'} width={'100vw'} sx={{ p: '2rem', background: 'teal' }}>
 				<Stack>
 					{
@@ -18,7 +18,7 @@ const Profile = () => {
 							{ name: "Email", value: "johndoe@eamil.com" },
 							{ name: "Username", value: "johon123" }
 						].map((v, i) => {
-							return <Typography fontSize={'2rem'} fontWeight={600}>
+							return <Typography key={i} fontSize={'2rem'} fontWeight={600}>
 								{v.name}: {v.value}
 							</Typography>
 						})
