@@ -2,9 +2,8 @@ import React from 'react'
 import { Box, Typography, Stack, Button, Card, CardMedia } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import NavBar from './NavBar'
-import Footer from '../components/Footer'
 
-const LandingDashBoard = () => {
+const Favorite = () => {
 	const navbg = '#002e29'
 	const fakeObj = {
 		name: "Abia State University, Uturu",
@@ -27,8 +26,8 @@ const LandingDashBoard = () => {
 
 				<Stack>
 					<Stack>
-						<Typography marginLeft={10} fontWeight={700} fontSize={'2rem'} marginTop='10px'>
-							Our Schools
+						<Typography marginLeft={10} fontWeight={700} fontSize={'2rem'} marginTop='90px'>
+							Your Favorites
 						</Typography>
 					</Stack>
 					<Stack>
@@ -55,7 +54,7 @@ const LandingDashBoard = () => {
 							</Stack>
 						</Stack>)}
 					</Stack>
-					<Footer />
+
 				</Stack>
 
 			</Box>
@@ -63,4 +62,4 @@ const LandingDashBoard = () => {
 	)
 }
 
-export default LandingDashBoard
+export default Favorite

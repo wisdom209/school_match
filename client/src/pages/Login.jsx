@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
-import { Box, Typography, Stack, Button, Paper, TextField } from '@mui/material'
+import { Box, Button, Stack, TextField, Typography } from '@mui/material'
+import React from 'react'
+import NavBar from './NavBar'
 
-const Auth = () => {
+const Login = () => {
 	const navbg = '#002e29'
-	const [authState, setAuthState] = useState('Login')
+	const type = "Login"
+	const submitText = "Sign in"
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
@@ -11,41 +13,15 @@ const Auth = () => {
 
 	return (
 		<>
-			<Box height='100vh' width='100vw' bgcolor='teal'>
+			<Box minHeight='100vh' width='100vw' bgcolor='teal'>
 				{/* Nav Bar */}
-				<Stack direction='row' bgcolor={navbg} height='80px' paddingLeft={2}>
-					<Stack flexGrow={1}>
-						<Typography fontSize='3rem' fontWeight={700} color="white">
-							School Match
-						</Typography>
-					</Stack>
-
-					<Stack spacing={2} direction='row' padding={2}>
-						<Button>
-							<Typography color="white" fontSize='1.5rem'>
-								Home
-							</Typography>
-						</Button>
-						<Button onClick={() => {
-							if (authState == 'Login') {
-								setAuthState('Register')
-							} else {
-								setAuthState('Login')
-							}
-						}} >
-							<Typography color="white" fontSize='1.5rem'>
-								{authState}
-							</Typography>
-						</Button>
-
-					</Stack>
-				</Stack>
+				<NavBar />
 
 				{/* main page */}
 				<Box display={'flex'} justifyContent={'center'} alignItems={'center'} mt={5} flexDirection={'column'} width={'100vw'}>
 					<Stack width={'100vw'}>
 						<Typography fontSize={'2rem'} fontWeight={700} sx={{ textAlign: 'start', ml: 4 }}>
-							{authState == "Register" ? "Sign In".toUpperCase() : "Register".toUpperCase()}
+							{type}
 						</Typography>
 					</Stack>
 
@@ -65,7 +41,6 @@ const Auth = () => {
 								id='email'
 								label='Emaill Address'
 								autoComplete='email'
-								autoFocus
 							/>
 							<TextField
 								margin='normal'
@@ -89,7 +64,7 @@ const Auth = () => {
 									}
 								}}
 							>
-								{authState == "Register" ? "Sign In" : "Register"}
+								{submitText}
 							</Button>
 						</Box>
 
@@ -101,4 +76,4 @@ const Auth = () => {
 	)
 }
 
-export default Auth
+export default Login

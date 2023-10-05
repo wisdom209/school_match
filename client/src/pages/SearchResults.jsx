@@ -1,11 +1,10 @@
+import { Box, Card, CardMedia, Stack, Typography } from '@mui/material'
 import React from 'react'
-import { Box, Typography, Stack, Button, Card, CardMedia } from '@mui/material'
-import { useNavigate } from 'react-router-dom'
-import NavBar from './NavBar'
 import Footer from '../components/Footer'
+import NavBar from './NavBar'
 
-const LandingDashBoard = () => {
-	const navbg = '#002e29'
+const SearchResult = () => {
+
 	const fakeObj = {
 		name: "Abia State University, Uturu",
 		description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laborum reprehenderit natus minus est reiciendis veritatis enim nam sed quis officia accusantium nemo quibusdam, voluptates quae laudantium quam eius exercitationem cum autem cumque perferendis adipisci doloremque. Animi accusantium numquam optio at sequi doloremque consectetur praesentium vel provident! Eaque obcaecati dolorum similique!",
@@ -17,7 +16,6 @@ const LandingDashBoard = () => {
 
 	const school = Array(3).fill(fakeObj)
 
-	const navigate = useNavigate()
 	return (
 		<>
 
@@ -28,7 +26,7 @@ const LandingDashBoard = () => {
 				<Stack>
 					<Stack>
 						<Typography marginLeft={10} fontWeight={700} fontSize={'2rem'} marginTop='10px'>
-							Our Schools
+							Search Results
 						</Typography>
 					</Stack>
 					<Stack>
@@ -55,12 +53,13 @@ const LandingDashBoard = () => {
 							</Stack>
 						</Stack>)}
 					</Stack>
-					<Footer />
+
 				</Stack>
+				<Footer />
 
 			</Box>
 		</>
 	)
 }
 
-export default LandingDashBoard
+export default SearchResult

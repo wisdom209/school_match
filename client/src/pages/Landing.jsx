@@ -1,33 +1,29 @@
-import React from 'react'
-import { Box, Typography, Stack, Button } from '@mui/material'
+import { Box, Button, Divider, Stack, Typography } from '@mui/material'
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { searchGeneral } from '../api/client'
+import NavBar from './NavBar'
+import Footer from '../components/Footer'
 
 const Landing = () => {
 	const navbg = '#002e29'
+	const navigate = useNavigate()
+	const [schools, setSchools] = useState([])
+
+	useEffect(() => {
+		const gen = searchGeneral()
+		gen.then(data => {
+			console.log(data)
+			setSchools(data)
+		})
+
+	}, [])
+
 	return (
 		<>
-			<Box height='100vh' width='100vw' bgcolor='teal'>
+			<Box minHeight='100vh' width='100vw' bgcolor='teal'>
 				{/* Nav Bar */}
-				<Stack direction='row' bgcolor={navbg} height='80px' paddingLeft={2}>
-					<Stack flexGrow={1}>
-						<Typography fontSize='3rem' fontWeight={700} color="white">
-							School Match
-						</Typography>
-					</Stack>
-
-					<Stack spacing={2} direction='row' padding={2}>
-						<Button>
-							<Typography color="white" fontSize='1.5rem'>
-								Home
-							</Typography>
-						</Button>
-						<Button>
-							<Typography color="white" fontSize='1.5rem'>
-								Sign in
-							</Typography>
-						</Button>
-
-					</Stack>
-				</Stack>
+				<NavBar />
 				<Box display={'flex'} justifyContent={'center'} alignItems={'center'} mt={5}>
 					<Stack direction={'row'} spacing={5} padding={15}>
 						<img src='/online_test.svg' alt='certificate png' style={
@@ -44,6 +40,8 @@ const Landing = () => {
 								background: navbg,
 								margin: '10px',
 								width: '40%'
+							}} onClick={() => {
+								navigate('/dashboard')
 							}}>
 								<Typography>
 									Come Onboard!
@@ -52,6 +50,33 @@ const Landing = () => {
 						</Stack>
 					</Stack>
 				</Box>
+
+				<Stack sx={{ mx: '20px' }} display={'flex'} alignItems={'center'}>
+					<h3 style={{ textAlign: 'center', fontSize: '5rem', color: 'white', marginTop: '-2.5rem', marginBottom: '5px' }}>Some of our Schools</h3>
+					{
+						schools.map((v, i) => {
+							return <Stack
+								key={i} display={'flex'} flexDirection={'row'} gap={"2p"} sx={{ my: '5px', width: '80%' }}>
+								<Stack sx={{ mr: '30px' }}>
+									<img src="/exp.png" alt="school image" style={{
+										width: '500px'
+									}} />
+								</Stack>
+								<Stack>
+									<Typography><b>{v.school.name}, {v.school.country}</b></Typography>
+									<Typography><b>{v.school.type}</b></Typography>
+									<Typography><b>{v.degree.title}</b></Typography>
+									<Typography><b>{v.grade.grade}</b></Typography>
+									<Typography><b>{v.course.name}</b></Typography>
+									<Typography><a href="/dashboard">See Details</a></Typography>
+								</Stack>
+
+							</Stack>
+						})
+					}
+				</Stack>
+
+				<Footer />
 
 			</Box>
 		</>
