@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Box, Typography, Stack, Button, Paper, TextField } from '@mui/material'
 import { useNavigate, useLocation } from 'react-router-dom'
-import NavBar from './NavBar'
+import NavBar from '../components/NavBar'
 import Footer from '../components/Footer'
 
 const Register = () => {

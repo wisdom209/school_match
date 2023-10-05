@@ -2,7 +2,7 @@ import { Box, Button, Divider, Stack, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { searchGeneral } from '../api/client'
-import NavBar from './NavBar'
+import NavBar from '../components/NavBar'
 import Footer from '../components/Footer'
 
 const Landing = () => {

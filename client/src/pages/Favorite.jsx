@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Typography, Stack, Button, Card, CardMedia } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
-import NavBar from './NavBar'
+import NavBar from '../components/NavBar'
 
 const Favorite = () => {
 	const navbg = '#002e29'

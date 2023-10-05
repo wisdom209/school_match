@@ -1,7 +1,7 @@
 import { Box, Card, CardMedia, Stack, Typography } from '@mui/material'
 import React from 'react'
 import Footer from '../components/Footer'
-import NavBar from './NavBar'
+import NavBar from '../components/NavBar'
 
 const SearchResult = () => {
 

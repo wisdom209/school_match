@@ -19,7 +19,8 @@ const NavBar = () => {
 					{ name: "Profile", link: "/profile" },
 					{ name: "Favorites", link: '/favorites' },
 					{ name: "Sign Up", link: '/register' },
-					{ name: "Search", link: '/search' }
+					{ name: "Search", link: '/search' },
+					{ name: "Logout", link: '/' }
 					]
 						.map((v, i) => {
 							return <Button key={i} onClick={() => { navigate(v.link) }}>

@@ -1,6 +1,6 @@
 import { Box, Button, Stack, TextField, Typography } from '@mui/material'
 import React from 'react'
-import NavBar from './NavBar'
+import NavBar from '../components/NavBar'
 
 const Update = () => {
 	const navbg = '#002e29'
