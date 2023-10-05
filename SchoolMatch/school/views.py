@@ -92,25 +92,25 @@ class SearchViewSet(viewsets.ModelViewSet):
         search_conditions = Q()
     
         if grade:
-            search_conditions &= Q(grade__grade=grade)
+            search_conditions &= Q(grade__grade__icontains=grade)
     
         if degree_type:
-            search_conditions &= Q(degree__title=degree_type)
+            search_conditions &= Q(degree__title__icontains=degree_type)
     
         if school_type:
-            search_conditions &= Q(school__type=school_type)
+            search_conditions &= Q(school__school_type__icontains=school_type)
         
         if school_name:
-            search_conditions &= Q(school__name=school_name)
+            search_conditions &= Q(school__name__icontains=school_name)
         
         if course:
-            search_conditions &= Q(course__name=course)
+            search_conditions &= Q(course__name__icontains=course)
         
         if country:
-            search_conditions &= Q(school__country=country)
+            search_conditions &= Q(school__country__icontains=country)
         
         if program:
-            search_conditions &= Q(program__name=program)
+            search_conditions &= Q(program__name__icontains=program)
     
         if search:
             search_fields = ['course__name', 'school__name', 'degree__title', 'grade__grade', 'program__name', 'school__country']
