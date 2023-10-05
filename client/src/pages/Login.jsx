@@ -1,21 +1,39 @@
 import { Box, Button, Stack, TextField, Typography } from '@mui/material'
-import React from 'react'
+import React, { useState } from 'react'
 import NavBar from '../components/NavBar'
+import { signInUser } from '../api/client'
+import { useNavigate } from 'react-router-dom'
+import Cookie from 'js-cookie'
 
 const Login = () => {
 	const navbg = '#002e29'
 	const type = "Login"
 	const submitText = "Sign in"
 
+	const [username, setUsername] = useState("")
+	const [password, setPassword] = useState("")
+	const navigate = useNavigate()
+
 	const handleSubmit = (e) => {
 		e.preventDefault()
+		let user_data = signInUser({ username, password }).then(res => res)
+		user_data = user_data.then((res) => {
+			if (res.error) {
+				console.log(res.error)
+				alert(res.error)
+			}
+			else {
+				Cookie.set('token', res.token)
+				navigate('/dashboard')
+			}
+		})
 	}
 
 	return (
 		<>
 			<Box minHeight='100vh' width='100vw' bgcolor='teal'>
 				{/* Nav Bar */}
-				<NavBar options={['sign up']}/>
+				<NavBar options={['sign up']} />
 
 				{/* main page */}
 				<Box display={'flex'} justifyContent={'center'} alignItems={'center'} mt={5} flexDirection={'column'} width={'100vw'}>
@@ -35,14 +53,16 @@ const Login = () => {
 
 						<Box component={'form'} onSubmit={handleSubmit}>
 							<TextField
+								onChange={(e) => { setUsername(e.target.value) }}
 								margin='normal'
 								required
 								fullWidth
-								id='email'
-								label='Emaill Address'
-								autoComplete='email'
+								id='username'
+								label='Username'
+								autoComplete='username'
 							/>
 							<TextField
+								onChange={(e) => { setPassword(e.target.value) }}
 								margin='normal'
 								required
 								fullWidth

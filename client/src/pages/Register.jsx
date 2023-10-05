@@ -3,22 +3,40 @@ import { Box, Typography, Stack, Button, Paper, TextField } from '@mui/material'
 import { useNavigate, useLocation } from 'react-router-dom'
 import NavBar from '../components/NavBar'
 import Footer from '../components/Footer'
+import { createUser } from '../api/client'
 
 const Register = () => {
 	const navbg = '#002e29'
 	const type = "Register"
 	const submitText = "Sign Up"
 
+	const navigate = useNavigate()
+	const [first_name, setfirst_name] = useState("")
+	const [last_name, setlast_name] = useState("")
+	const [email, setEmail] = useState("")
+	const [username, setUsername] = useState("")
+	const [password, setPassword] = useState("")
+	const [confirm_password, setConfirm_password] = useState("")
+
 	const handleSubmit = (e) => {
 		e.preventDefault()
+		let user_created = createUser({ first_name, last_name, email, username, password, confirm_password }).then(res => res)
+		user_created = user_created.then(res => {
+			console.log(res)
+			if (res.error) {
+				alert(res.error)
+			} else {
+				navigate('/login')
+			}
+			console.log(res.data, "completed in the response")
+		})
 	}
 
 	return (
 		<>
 			<Box minHeight='100vh' width='100vw' bgcolor='teal'>
 				{/* Nav Bar */}
-				<NavBar options={['sign in']}/>
-
+				<NavBar options={['sign in']} />
 				{/* main page */}
 				<Box display={'flex'} justifyContent={'center'} alignItems={'center'} mt={5} flexDirection={'column'} width={'100vw'}>
 					<Stack width={'100vw'}>
@@ -46,6 +64,30 @@ const Register = () => {
 								{ label: 'Confirm Password', id: 'confirm_password', type: 'password' },
 
 							].map((v, i) => <TextField
+								onChange={(e) => {
+									switch (true) {
+										case "first_name" == v.id:
+											setfirst_name(e.target.value)
+											break;
+										case "last_name" == v.id:
+											setlast_name(e.target.value)
+											break;
+										case "email" == v.id:
+											setEmail(e.target.value)
+											break;
+										case "username" == v.id:
+											setUsername(e.target.value)
+											break;
+										case "password" == v.id:
+											setPassword(e.target.value)
+											break;
+										case "confirm_password" == v.id:
+											setConfirm_password(e.target.value)
+											break;
+										default:
+											break;
+									}
+								}}
 								color='text'
 								key={i}
 								margin='normal'
@@ -76,7 +118,7 @@ const Register = () => {
 				</Box>
 
 			</Box>
-			<Footer/>
+			<Footer />
 		</>
 	)
 }
