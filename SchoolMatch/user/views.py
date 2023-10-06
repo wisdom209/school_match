@@ -76,17 +76,16 @@ class FavoriteView(generics.ListCreateAPIView):
     serializer_class = FavoritePostSerializer
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
-    lookup_field = 'user_id'
     
-    def get_queryset(self):
-        user_id = self.request.user.id
-        return Favorite.objects.filter(user_id=user_id)
+    # def get_queryset(self):
+    #     user_id = self.request.user.id
+    #     return Favorite.objects.filter(user_id=user_id)
     
-    def get_object(self):
-        queryset = self.get_queryset()
-        obj = get_object_or_404(queryset, id=self.kwargs['user_id'])
-        self.check_object_permissions(self.request, obj)
-        return obj
+    # def get_object(self):
+    #     queryset = self.get_queryset()
+    #     obj = get_object_or_404(queryset, id=self.kwargs['user_id'])
+    #     self.check_object_permissions(self.request, obj)
+    #     return obj
     
 
 class FavoriteSearch(viewsets.ModelViewSet):
