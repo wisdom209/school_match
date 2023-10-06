@@ -28,7 +28,6 @@ const Register = () => {
 			} else {
 				navigate('/login')
 			}
-			console.log(res.data, "completed in the response")
 		})
 	}
 

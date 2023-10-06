@@ -2,9 +2,11 @@ import { Box, Button, Stack, Typography } from '@mui/material'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import NavBar from '../components/NavBar'
+import { useSelector } from 'react-redux'
 
 const Profile = () => {
 	const navigate = useNavigate()
+	const user = useSelector(state => state.app.user)
 
 	return (
 		<>
@@ -13,17 +15,17 @@ const Profile = () => {
 				<Stack>
 					{
 						[
-							{ name: "First name", value: "John" },
-							{ name: "Last name", value: "Doe" },
-							{ name: "Email", value: "johndoe@eamil.com" },
-							{ name: "Username", value: "johon123" }
+							{ name: "First name", value: user?.first_name },
+							{ name: "Last name", value: user?.last_name },
+							{ name: "Email", value: user?.email},
+							{ name: "Username", value: user?.username }
 						].map((v, i) => {
 							return <Typography key={i} fontSize={'2rem'} fontWeight={600}>
 								{v.name}: {v.value}
 							</Typography>
 						})
 					}
-					<Button onClick={()=>{
+					<Button onClick={() => {
 						navigate('/update')
 					}}
 						sx={{
