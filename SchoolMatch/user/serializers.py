@@ -26,6 +26,34 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
         
         return user
+    
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=False)
+    confirm_password = serializers.CharField(write_only=True, required=False)
+    
+    class Meta:
+        model = User
+        fields = ['id', 'first_name', 'last_name', 'username', 'email', 'password', 'confirm_password']
+        
+    def update(self, instance, validated_data):
+        # check if the 'password' field is included
+        password = validated_data.get('password')
+        if password:
+            instance.set_password(password)
+            instance.save()
+            
+        # Remove 'password' and 'confirm_password' fields from validated data
+        validated_data.pop('password')
+        validated_data.pop('confirm_password')
+        
+        #update other fields
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        
+        return instance
+    
 
 class FavoriteSerializer(serializers.ModelSerializer):    
     class Meta:
