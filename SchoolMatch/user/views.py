@@ -3,7 +3,7 @@ from rest_framework import status, generics, viewsets
 from rest_framework.response import Response 
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from .serializers import UserSerializer, FavoriteSerializer, FavoritePostSerializer
+from .serializers import UserSerializer, FavoriteSerializer, FavoritePostSerializer, UserUpdateSerializer
 from .models import Favorite
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
@@ -63,7 +63,7 @@ def logout(request):
 
 class UserUpdate(generics.UpdateAPIView):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = UserUpdateSerializer
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     
@@ -77,15 +77,15 @@ class FavoriteView(generics.ListCreateAPIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     
-    # def get_queryset(self):
-    #     user_id = self.request.user.id
-    #     return Favorite.objects.filter(user_id=user_id)
+    def get_queryset(self):
+        user_id = self.request.user.id
+        return Favorite.objects.filter(user_id=user_id)
     
-    # def get_object(self):
-    #     queryset = self.get_queryset()
-    #     obj = get_object_or_404(queryset, id=self.kwargs['user_id'])
-    #     self.check_object_permissions(self.request, obj)
-    #     return obj
+    def get_object(self):
+        queryset = self.get_queryset()
+        obj = get_object_or_404(queryset, id=self.kwargs['user_id'])
+        self.check_object_permissions(self.request, obj)
+        return obj
     
 
 class FavoriteSearch(viewsets.ModelViewSet):
