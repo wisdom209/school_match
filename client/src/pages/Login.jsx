@@ -23,7 +23,6 @@ const Login = () => {
 		let user_data = signInUser({ username, password }).then(res => res)
 		user_data = user_data.then((res) => {
 			if (res.error) {
-				console.log(res.error)
 				alert(res.error)
 			}
 			else {

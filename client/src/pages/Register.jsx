@@ -22,7 +22,6 @@ const Register = () => {
 		e.preventDefault()
 		let user_created = createUser({ first_name, last_name, email, username, password, confirm_password }).then(res => res)
 		user_created = user_created.then(res => {
-			console.log(res)
 			if (res.error) {
 				alert(res.error)
 			} else {

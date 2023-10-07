@@ -1,32 +1,37 @@
 import { Box, Button, Stack, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import NavBar from '../components/NavBar'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { updateUserProfile } from '../api/client'
+import { useNavigate } from 'react-router-dom'
+import { setUserData } from '../redux/AppSlice'
 
 const Update = () => {
 	const navbg = '#002e29'
 	const submitText = "Submit"
 	const type = "Update Profile"
 	const user = useSelector(state => state.app.user)
+	const navigate = useNavigate()
+	const dispatch = useDispatch()
 
 	const [userInfo, setUserInfo] = useState(user)
 	const [first_name, setfirst_name] = useState(user.first_name)
 	const [last_name, setlast_name] = useState(user.last_name)
 	const [email, setEmail] = useState(user.email)
-	const [username, setUsername] = useState("")
+	const [username, setUsername] = useState(user.username)
 	const [password, setPassword] = useState("")
 	const [confirm_password, setConfirm_password] = useState("")
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
-		let user_created = updateUserProfile({ first_name, last_name, email, username, password, confirm_password }, user.id).then(res => res)
+		let post_data = { first_name, last_name, email, username, password, confirm_password }
+		let user_created = updateUserProfile(post_data, user.id).then(res => res)
 		user_created = user_created.then(res => {
-			console.log(res, 'upd')
 			if (res.error) {
-				// alert(res.error)
+				(res.error)
 			} else {
-				navigate('/profile')
+				dispatch(setUserData({ ...userInfo, ...post_data }))
+				navigate('/profile', { replace: true, preventScrollReset: true })
 			}
 		})
 
@@ -36,7 +41,7 @@ const Update = () => {
 		<>
 			<Box minHeight='100vh' width='100vw' bgcolor='teal'>
 				{/* Nav Bar */}
-				
+
 				<NavBar options={['home', 'profile', 'favorites', 'search', 'logout']} />
 				{/* main page */}
 				<Box display={'flex'} justifyContent={'center'} alignItems={'center'} mt={5} flexDirection={'column'} width={'100vw'}>
@@ -57,11 +62,11 @@ const Update = () => {
 
 						<Box component={'form'} onSubmit={handleSubmit}>
 							{[
-								{ label: "First name", id: "first_name", type: 'text' },
-								{ label: "Last name", id: "last_name", type: 'text' },
-								{ label: 'Email Address', id: "email", type: 'email' },
-								{ label: 'Password', id: 'password', type: 'password' },
-								{ label: 'Confirm Password', id: 'confirm_password', type: 'password' },
+								{ label: "First name", id: "first_name", type: 'text', value: first_name },
+								{ label: "Last name", id: "last_name", type: 'text', value: last_name },
+								{ label: 'Email Address', id: "email", type: 'email', value: email },
+								{ label: 'Password', id: 'password', type: 'password', value: password },
+								{ label: 'Confirm Password', id: 'confirm_password', type: 'password', value: confirm_password },
 
 							].map((v, i) => <TextField
 								onChange={(e) => {
@@ -93,7 +98,7 @@ const Update = () => {
 									}
 								}}
 								color='text'
-								value={userInfo[v.id]}
+								value={v.value}
 								key={i}
 								margin='normal'
 								required

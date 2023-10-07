@@ -57,27 +57,22 @@ export const getUserProfile = async () => {
 }
 
 export const updateUserProfile = async (post_object, user_id) => {
-	const link = baseUrl + `/user/profile/${user_id}`
+	const link = baseUrl + `/api/user/profile/${user_id}`
 	const token = Cookie.get('token')
-
-	console.log(link)
 
 	return axios.put(link, post_object, {
 		headers: {
 			Authorization: `Token ${token}`
 		}
 	}).then(response => {
-		console.log(response)
 		return response.data
 	}).catch((err) => {
-		console.log(err)
-
 		return { error: err, data: null }
 	})
 }
 
 export const addToFavorite = async (user_id, dept_id) => {
-	const link = baseUrl + '/api/user/favorite/1'
+	const link = baseUrl + '/api/user/favorite'
 	const token = Cookie.get('token')
 
 	return axios.post(link, { user: user_id, department: dept_id }, {
@@ -91,8 +86,23 @@ export const addToFavorite = async (user_id, dept_id) => {
 	})
 }
 
-export const getFavorites = async (user_id, dept_id) => {
-	const link = baseUrl + '/api/user/favorites/'
+export const deleteFavorite = async (dept_id, user_id) => {
+	const link = baseUrl + `/api/user/favorite/${user_id}/${dept_id}`
+	const token = Cookie.get('token')
+
+	return axios.delete(link, {
+		headers: {
+			Authorization: `Token ${token}`
+		}
+	}).then(res => {
+		return { error: null, data: res.data }
+	}).catch(err => {
+		return { error: err, data: null }
+	})
+}
+
+export const getFavorites = async () => {
+	const link = baseUrl + '/api/user/favorite'
 	const token = Cookie.get('token')
 
 	return axios.get(link, {
@@ -107,20 +117,12 @@ export const getFavorites = async (user_id, dept_id) => {
 }
 
 
-export const search = async (value) => {
-	const link = baseUrl + '/api/user/favorites/'
-	const token = Cookie.get('token')
+export const search = async (post_object) => {
+	const link = baseUrl + '/api/school/search'
 
-	return axios.get(link, {
-		headers: {
-			Authorization: `Token ${token}`
-		},
-		params: {
-			search: value
-		}
-	}).then(res => {
-		console.log(res, 'year')
+	return axios.get(link, { params: post_object }).then(res => {
+		return { error: null, data: res.data }
 	}).catch(err => {
-		console.log(err)
+		return { error: err, data: null }
 	})
 }
